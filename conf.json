@@ -1,0 +1,21 @@
+{
+  "plugins": ["plugins/markdown"],
+  "recurseDepth": 10,
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "source": {
+    "include": ["plugins/","lib/","index.js"],
+    "exclude":["test","node_modules"],
+    "includePattern": ".+\\.js$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "template": "node_modules/minami",
+    "encoding": "utf8",              
+    "destination": "./docs/",         
+    "recurse": true,
+    "readme":"README.md"
+  }
+}
