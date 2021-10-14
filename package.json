@@ -1,6 +1,6 @@
 {
   "name": "brick-axios",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "axios for brick engine",
   "main": "index.js",
   "types": "typings/index.d.ts",
@@ -81,7 +81,7 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"
     },
-    "testEnvironment":"node",
+    "testEnvironment": "node",
     "collectCoverageFrom": [
       "plugins/**/*.js",
       "lib/**/*.js",
