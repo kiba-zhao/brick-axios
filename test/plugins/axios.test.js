@@ -6,17 +6,17 @@
  */
 'use strict';
 
-const {MODULE_KEY,AxiosPlugins,defineAxios} = require('../../plugins/axios');
+const { MODULE_KEY, AxiosPlugins, defineAxios } = require('../../plugins/axios');
 const { Provider, injectMetadata } = require('brick-engine');
 const faker = require('faker');
 
-describe('plugins/axios',()=>{
-  
+describe('plugins/axios', () => {
+
   it('MODULE_KEY', () => {
     expect(MODULE_KEY).toBe('brick-axios:plugins:AxiosPlugin');
   });
 
-  describe('AxiosPlugin',()=>{
+  describe('AxiosPlugin', () => {
 
     /** @type {Provider} **/
     let provider;
@@ -31,7 +31,7 @@ describe('plugins/axios',()=>{
 
     });
 
-    describe('match',()=>{
+    describe('match', () => {
 
       it('success', () => {
 
@@ -62,10 +62,10 @@ describe('plugins/axios',()=>{
         expect(res).toBeFalsy();
 
       });
-      
+
     });
 
-    describe('use',()=>{
+    describe('use', () => {
 
       it('simple', async () => {
 
@@ -81,9 +81,53 @@ describe('plugins/axios',()=>{
         expect(defineFn).toBeCalledWith(id, [], expect.anything());
 
       });
-      
+
+      it('interceptor', async () => {
+
+        const request = jest.fn();
+        const response = jest.fn();
+        const requestId = Symbol('requestId');
+        const responseId = Symbol('responseId');
+        const id = Symbol('id');
+        const target = () => { };
+
+        request.mockReturnValue({ type: 'request', fulfilled: () => {}, rejected: () => {} });
+        response.mockReturnValue({ type: 'response', fulfilled: () => {}, rejected: () => {} });
+        provider.define(requestId, [], request);
+        provider.define(responseId, [], response);
+        defineAxios(target, { id, interceptors: [ requestId, responseId ] });
+
+        await plugin.use(target);
+        await provider.require({ id });
+
+        expect(request).toBeCalledTimes(1);
+        expect(response).toBeCalledTimes(1);
+      });
+
+      it('interceptor error', async () => {
+
+        const factory = jest.fn();
+        const interceptorId = Symbol('interceptorId');
+        const type = faker.datatype.uuid();
+        const id = Symbol('id');
+        const target = () => { };
+
+        factory.mockReturnValue({ type });
+        provider.define(interceptorId, [], factory);
+        defineAxios(target, { id, interceptors: [ interceptorId ] });
+
+        await plugin.use(target);
+
+        const WRONG_INTERCEPTOR_TYPE = `[${MODULE_KEY}] createAxios Error: wrong interceptor type ${type}`;
+
+        await expect(provider.require({ id })).rejects.toThrow(WRONG_INTERCEPTOR_TYPE);
+        expect(factory).toBeCalledTimes(1);
+
+      });
+
     });
-    
+
   });
-  
+
 });
+

@@ -11,12 +11,12 @@
  */
 
 const assert = require('assert');
-const {PACKAGE_NAME} = require('../lib/constants');
-const {Provider,isProviderStoreKey,createExtractFunction,createDefineFunction} = require('brick-engine');
-const { EngineModule,ProviderStoreKey} = require('brick-engine'); // eslint-disable-line no-unused-vars
+const { PACKAGE_NAME } = require('../lib/constants');
+const { Provider, isProviderStoreKey, createExtractFunction, createDefineFunction } = require('brick-engine');
+const { EngineModule, ProviderStoreKey, ProviderDependency } = require('brick-engine'); // eslint-disable-line no-unused-vars
 const axios = require('axios');
-const {AxiosRequestConfig} = require('axios'); // eslint-disable-line no-unused-vars
-const {isObject} = require('lodash');
+const { AxiosRequestConfig, AxiosInstance, AxiosInterceptorManager } = require('axios'); // eslint-disable-line no-unused-vars
+const { isObject, isArray } = require('lodash');
 
 const MODULE_KEY = `${PACKAGE_NAME}:plugins:AxiosPlugin`;
 exports.MODULE_KEY = MODULE_KEY;
@@ -32,6 +32,7 @@ const extractAxiosMetadataQueue = createExtractFunction('extractAxiosMetadataQue
  *  @typedef {Object} AxiosMetadata
  * @property {ProviderStoreKey} [id] axios提供器id
  * @property {AxiosRequestConfig} [config] axios配置
+ * @property {ProviderStoreKey[]} [interceptors] 拦截器提供器Id
  *
  */
 
@@ -83,14 +84,64 @@ class AxiosPlugins {
     /** @type {AxiosMetadata[]} **/
     const metadataQueue = extractAxiosMetadataQueue(module);
     for (const metadata of metadataQueue) {
-      const { id, config } = metadata;
-      provider.define(id || module,[],axios.create.bind(this,config || {}));
+      const { id, config, interceptors } = metadata;
+      const deps = interceptors && interceptors.length > 0 ? interceptors.map(toProviderDependency) : [];
+      provider.define(id || module, deps, createAxios.bind(this, config || {}));
     }
   }
-  
+
 }
 
 exports.AxiosPlugins = AxiosPlugins;
+
+/**
+ * 转换为dep依赖参数
+ * @param {ProviderStoreKey} id
+ * @return {ProviderDependency} 依赖参数
+ */
+function toProviderDependency(id) {
+
+  debug('toProviderDependency %s', id);
+  return { id };
+}
+
+/**
+ * axios拦截器
+ *  @typedef {Object} AxiosInterceptor
+ * @property {String} type 拦截器类型:request/response
+ * @property {Function} fulfilled 履行方法
+ * @property {Function} rejected 异常方法
+ *
+ */
+
+/**
+ * 构建axios实例
+ * @param {AxiosRequestConfig} config axios配置
+ * @param {AxiosInterceptor[]} interceptors 拦截器实例对象
+ */
+function createAxios(config, ...interceptors) {
+
+  debug('createAxios %s %s', config, interceptors);
+
+  /** @type {AxiosInstance} **/
+  const instance = axios.create(config);
+  if (interceptors.length > 0) {
+    for (const interceptor of interceptors) {
+
+      /** @type {AxiosInterceptorManager} **/
+      const manager = instance.interceptors[interceptor.type];
+      assert(
+        manager,
+        `[${MODULE_KEY}] createAxios Error: wrong interceptor type ${interceptor.type}`
+      );
+      const { fulfilled, rejected } = interceptor;
+      manager.use(fulfilled.bind(interceptor), rejected.bind(interceptor));
+    }
+  }
+
+  return instance;
+}
+
 
 /**
  * 是否为axios元数据
@@ -98,7 +149,7 @@ exports.AxiosPlugins = AxiosPlugins;
  * @return {boolean} true:是/false:否
  */
 function isAxiosMetadata(metadata) {
-  
+
   debug('isAxiosMetadata %s', metadata);
 
   if (!isObject(metadata)) {
@@ -110,6 +161,10 @@ function isAxiosMetadata(metadata) {
   }
 
   if (metadata.config !== undefined && !isAxiosConfig(metadata.config)) {
+    return false;
+  }
+
+  if (metadata.interceptors !== undefined && !(isArray(metadata.interceptors) && metadata.interceptors.every(isProviderStoreKey))) {
     return false;
   }
 
