@@ -41,9 +41,9 @@
   "author": "kiba.x.zhao",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kiba-zhao/brick-component/issues"
+    "url": "https://github.com/kiba-zhao/brick-axios/issues"
   },
-  "homepage": "https://github.com/kiba-zhao/brick-component#readme",
+  "homepage": "https://github.com/kiba-zhao/brick-axios#readme",
   "devDependencies": {
     "@types/debug": "^4.1.5",
     "@types/faker": "^5.5.6",
