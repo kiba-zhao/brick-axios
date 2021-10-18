@@ -1,4 +1,4 @@
 import { axiosSetup } from "./lib/utils";
-import { AxiosPlugins } from "./plugins/axios";
+import { AxiosPlugin } from "./plugins/axios";
 import { defineAxios } from "./plugins/axios";
-export { axiosSetup, AxiosPlugins, defineAxios };
+export { axiosSetup, AxiosPlugin, defineAxios };

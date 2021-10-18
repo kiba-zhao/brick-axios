@@ -7,9 +7,9 @@
 'use strict';
 
 const { axiosSetup } = require('./lib/utils');
-const { AxiosPlugins, defineAxios } = require('./plugins/axios');
+const { AxiosPlugin, defineAxios } = require('./plugins/axios');
 
 module.exports = {
   axiosSetup,
-  AxiosPlugins, defineAxios,
+  AxiosPlugin, defineAxios,
 };

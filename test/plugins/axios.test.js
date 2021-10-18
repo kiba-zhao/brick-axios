@@ -6,7 +6,7 @@
  */
 'use strict';
 
-const { MODULE_KEY, AxiosPlugins, defineAxios } = require('../../plugins/axios');
+const { MODULE_KEY, AxiosPlugin, defineAxios } = require('../../plugins/axios');
 const { Provider, injectMetadata } = require('brick-engine');
 const faker = require('faker');
 
@@ -21,13 +21,13 @@ describe('plugins/axios', () => {
     /** @type {Provider} **/
     let provider;
 
-    /** @type {KoaErrorPlugin} **/
+    /** @type {AxiosPlugin} **/
     let plugin;
 
     beforeEach(() => {
 
       provider = new Provider();
-      plugin = new AxiosPlugins(provider);
+      plugin = new AxiosPlugin(provider);
 
     });
 

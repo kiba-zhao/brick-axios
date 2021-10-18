@@ -36,7 +36,7 @@ const extractAxiosMetadataQueue = createExtractFunction('extractAxiosMetadataQue
  *
  */
 
-class AxiosPlugins {
+class AxiosPlugin {
 
   /**
    * 组件处理插件构造函数
@@ -92,7 +92,7 @@ class AxiosPlugins {
 
 }
 
-exports.AxiosPlugins = AxiosPlugins;
+exports.AxiosPlugin = AxiosPlugin;
 
 /**
  * 转换为dep依赖参数
@@ -184,7 +184,7 @@ function isAxiosConfig(config) {
 /**
  * @see {@link module:lib/engine~EngineModule} 引擎模块类型
  * @see {@link module:plugins/axios~AxiosMetadata} axios元数据
- * @type {function(EngineModule,KoaErrorMetadata):EngineModule}
+ * @type {function(EngineModule,AxiosMetadata):EngineModule}
  */
 const _defineAxios = createDefineFunction('defineAxios', { scope: AXIOS_SCOPE });
 

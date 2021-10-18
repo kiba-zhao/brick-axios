@@ -41,7 +41,7 @@ export const MODULE_KEY: string;
  * @property {ProviderStoreKey[]} [interceptors] 拦截器提供器Id
  *
  */
-export class AxiosPlugins {
+export class AxiosPlugin {
     /**
      * 组件处理插件构造函数
      * @class
