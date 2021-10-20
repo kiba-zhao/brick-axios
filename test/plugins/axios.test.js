@@ -31,6 +31,24 @@ describe('plugins/axios', () => {
 
     });
 
+    describe('defineWinston', () => {
+
+      it('fatal', () => {
+
+        const target = () => { };
+        const WRONG_METADATA = `[${MODULE_KEY}] defineAxios Error:  wrong metadata args`;
+
+        expect(() => defineAxios(target)).toThrow(WRONG_METADATA);
+        expect(() => defineAxios(target, Symbol())).toThrow(WRONG_METADATA);
+        expect(() => defineAxios(target, { id: null })).toThrow(WRONG_METADATA);
+        expect(() => defineAxios(target, { id: Symbol(), config: Symbol() })).toThrow(WRONG_METADATA);
+        expect(() => defineAxios(target, { id: Symbol(), interceptors: Symbol() })).toThrow(WRONG_METADATA);
+
+      });
+
+    });
+
+
     describe('match', () => {
 
       it('success', () => {

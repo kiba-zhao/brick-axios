@@ -5,6 +5,7 @@
 
 ``` shell
 npm install --save brick-axios
+npm install --save axios
 ```
 
 ## Usage ##
