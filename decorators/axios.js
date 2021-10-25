@@ -7,6 +7,7 @@
 'use strict';
 
 const { EngineModule } = require('brick-engine'); // eslint-disable-line no-unused-vars
+const { AxiosMetadata } = require('../plugins/axios'); // eslint-disable-line no-unused-vars
 const { defineAxios } = require('../plugins/axios');
 const { PACKAGE_NAME } = require('../lib/constants');
 
