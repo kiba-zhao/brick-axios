@@ -8,6 +8,7 @@
 
 const { MODULE_KEY, AxiosPlugin, defineAxios } = require('../../plugins/axios');
 const { Provider, injectMetadata } = require('brick-engine');
+const { Axios } = require('../../decorators');
 const faker = require('faker');
 
 describe('plugins/axios', () => {
@@ -64,6 +65,27 @@ describe('plugins/axios', () => {
           id: Symbol(),
           config: JSON.parse(faker.datatype.json()),
         });
+
+        const res1 = plugin.match(target1);
+        expect(res1).toBeTruthy();
+
+      });
+
+      it('success with decorators', () => {
+
+        const target = () => { };
+        const decorator = Axios({ id: Symbol() });
+        decorator(target);
+
+        const res = plugin.match(target);
+        expect(res).toBeTruthy();
+
+        const target1 = () => { };
+        const decorator1 = Axios({
+          id: Symbol(),
+          config: JSON.parse(faker.datatype.json()),
+        });
+        decorator1(target1);
 
         const res1 = plugin.match(target1);
         expect(res1).toBeTruthy();

@@ -6,7 +6,7 @@
     "dictionaries": ["jsdoc","closure"]
   },
   "source": {
-    "include": ["plugins/","lib/","index.js"],
+    "include": ["decorators/","plugins/","lib/","index.js"],
     "exclude":["test","node_modules"],
     "includePattern": ".+\\.js$",
     "excludePattern": "(^|\\/|\\\\)_"

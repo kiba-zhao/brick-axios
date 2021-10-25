@@ -8,8 +8,10 @@
 
 const { axiosSetup } = require('./lib/utils');
 const { AxiosPlugin, defineAxios } = require('./plugins/axios');
+const { Axios } = require('./decorators');
 
 module.exports = {
   axiosSetup,
   AxiosPlugin, defineAxios,
+  Axios,
 };

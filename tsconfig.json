@@ -1,5 +1,5 @@
 {
-  "include": ["lib/**/*","plugins/**/*","index.js"],
+  "include": ["decorators/**/*","lib/**/*","plugins/**/*","index.js"],
   "exclude":["node_modules/**/*"],
   "compilerOptions": {
     "allowJs": true,
